@@ -37,8 +37,12 @@ namespace GifSceneMaker
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.desktop = new System.Windows.Forms.FlowLayoutPanel();
+            this.backdrop = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.desktop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.backdrop)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -47,7 +51,7 @@ namespace GifSceneMaker
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1008, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -58,7 +62,7 @@ namespace GifSceneMaker
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(800, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1008, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -101,11 +105,34 @@ namespace GifSceneMaker
             this.toolStripButton1.Text = "newToolStripButton";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // desktop
+            // 
+            this.desktop.AutoScroll = true;
+            this.desktop.BackColor = System.Drawing.Color.Teal;
+            this.desktop.Controls.Add(this.backdrop);
+            this.desktop.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.desktop.Location = new System.Drawing.Point(0, 49);
+            this.desktop.Name = "desktop";
+            this.desktop.Size = new System.Drawing.Size(1008, 680);
+            this.desktop.TabIndex = 2;
+            this.desktop.WrapContents = false;
+            // 
+            // backdrop
+            // 
+            this.backdrop.BackColor = System.Drawing.Color.White;
+            this.backdrop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.backdrop.Location = new System.Drawing.Point(3, 3);
+            this.backdrop.Name = "backdrop";
+            this.backdrop.Size = new System.Drawing.Size(500, 500);
+            this.backdrop.TabIndex = 0;
+            this.backdrop.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1008, 729);
+            this.Controls.Add(this.desktop);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -115,6 +142,8 @@ namespace GifSceneMaker
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.desktop.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.backdrop)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,6 +158,8 @@ namespace GifSceneMaker
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.FlowLayoutPanel desktop;
+        private System.Windows.Forms.PictureBox backdrop;
     }
 }
 
