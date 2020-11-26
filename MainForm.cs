@@ -74,24 +74,35 @@ namespace GifSceneMaker
             var image = Image.FromFile( files[ nextImage ] );
             nextImage++;
             nextImage %= files.Length;
-
-            //if ( paper.Width < image.Width || paper.Height < image.Height )
+            xy += 50;
+            var fakeImage = new Bitmap( image.Width + xy, image.Height + xy );
+            using ( Graphics grD = Graphics.FromImage( fakeImage ) )
             {
-                var paper = backdrop.Image;
-                var newPaper = new Bitmap( Math.Max( paper.Width, image.Width ), Math.Max( paper.Height, image.Height) );
-
-                using ( Graphics grD = Graphics.FromImage( newPaper ) )
-                {
-                    grD.DrawImage( paper, new PointF( 0.0f, 0.0f ) );
-                }
-
-                using ( Graphics grD = Graphics.FromImage( newPaper ) )
-                {
-                    grD.DrawImage( image, new PointF( xy, xy ) );
-                    xy += 25;
-                }
-                backdrop.Image = newPaper;
+                grD.DrawImage( image, new PointF( xy, xy ) );
             }
+            image = fakeImage;
+
+            // Add the newly introduced image to the backdrop
+            var paper = backdrop.Image;
+            var newPaper = new Bitmap( Math.Max( paper.Width, image.Width ), Math.Max( paper.Height, image.Height) );
+
+            // We're making a new image, so copy the prior contents
+            using ( Graphics grD = Graphics.FromImage( newPaper ) )
+            {
+                grD.DrawImage( paper, new PointF( 0.0f, 0.0f ) );
+            }
+
+            // Now add the new image
+            using ( Graphics grD = Graphics.FromImage( newPaper ) )
+            {
+                grD.DrawImage( image, new PointF( 0, 0 ) );
+            }
+
+
+            // Make it current
+            backdrop.Width = newPaper.Width;
+            backdrop.Height = newPaper.Height;
+            backdrop.Image = newPaper;
         }
     }
 }
