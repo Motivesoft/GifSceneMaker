@@ -55,6 +55,10 @@ namespace GifSceneMaker
             gifs.Clear();
             backdrop.SetBounds( backdrop.Location.X, backdrop.Location.Y, 500, 500 );
             backdrop.Image = new Bitmap( backdrop.Width, backdrop.Height );
+
+            // Debug stuff
+            nextImage = 0;
+            xy = 0;
         }
 
         private void exitApplication()
@@ -80,12 +84,12 @@ namespace GifSceneMaker
 
             if ( image is Bitmap )
             {
-                xy += 50;
                 gifs.Add( new Gif( image as Bitmap )
                 {
                     X = xy,
                     Y = xy,
                 } );
+                xy += 50;
             }
 
             updateBackdrop();
@@ -93,11 +97,9 @@ namespace GifSceneMaker
 
         private void updateBackdrop()
         {
-            var paper = backdrop.Image;
-
             // Work out the required paper size
-            int width = paper.Width;
-            int height = paper.Height;
+            int width = backdrop.Image.Width;
+            int height = backdrop.Image.Height;
             foreach ( var gif in gifs )
             {
                 width = Math.Max( width, gif.X + gif.Width );
