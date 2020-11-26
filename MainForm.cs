@@ -12,6 +12,8 @@ namespace GifSceneMaker
 {
     public partial class mainForm : Form
     {
+        private List<Gif> gifs = new List<Gif>();
+
         public mainForm()
         {
             InitializeComponent();
@@ -20,7 +22,7 @@ namespace GifSceneMaker
         private void mainForm_Load( object sender, EventArgs e )
         {
             // Something to start with
-            backdrop.Image = new Bitmap( backdrop.Width, backdrop.Height );
+            newDocument();
         }
 
         private void newToolStripButton_Click( object sender, EventArgs e )
@@ -50,7 +52,9 @@ namespace GifSceneMaker
 
         private void newDocument()
         {
-            MessageBox.Show( "New document" );
+            gifs.Clear();
+            backdrop.SetBounds( backdrop.Location.X, backdrop.Location.Y, 500, 500 );
+            backdrop.Image = new Bitmap( backdrop.Width, backdrop.Height );
         }
 
         private void exitApplication()
@@ -70,17 +74,57 @@ namespace GifSceneMaker
                     @"C:\Users\ian\Downloads\Gifs\Photo 25-11-2020, 20 17 49.gif",
                     @"C:\Users\ian\Downloads\Gifs\Photo 25-11-2020, 20 18 53.gif"
                 };
-
             var image = Image.FromFile( files[ nextImage ] );
             nextImage++;
             nextImage %= files.Length;
-            xy += 50;
-            var fakeImage = new Bitmap( image.Width + xy, image.Height + xy );
-            using ( Graphics grD = Graphics.FromImage( fakeImage ) )
+
+            if ( image is Bitmap )
             {
-                grD.DrawImage( image, new PointF( xy, xy ) );
+                xy += 50;
+                gifs.Add( new Gif( image as Bitmap )
+                {
+                    X = xy,
+                    Y = xy,
+                } );
             }
-            image = fakeImage;
+
+            updateBackdrop();
+        }
+
+        private void updateBackdrop()
+        {
+            var paper = backdrop.Image;
+
+            // Work out the required paper size
+            int width = paper.Width;
+            int height = paper.Height;
+            foreach ( var gif in gifs )
+            {
+                width = Math.Max( width, gif.X + gif.Width );
+                height = Math.Max( height, gif.Y + gif.Height );
+            }
+
+            // Draw the images in z-order
+            var newPaper = new Bitmap( width, height );
+            using ( Graphics grD = Graphics.FromImage( newPaper ) )
+            {
+                foreach ( var gif in gifs )
+                {
+                    gif.Draw( grD, 1, 1 );
+                }
+            }
+
+            // Make it current
+            backdrop.Width = newPaper.Width;
+            backdrop.Height = newPaper.Height;
+            backdrop.Image = newPaper;
+
+            /*
+            foreach ( var frameDimension in image.FrameDimensionsList )
+            {
+                var frameCount = image.GetFrameCount( new System.Drawing.Imaging.FrameDimension( frameDimension ) );
+                Console.WriteLine( $"Image: {frameDimension}: {frameCount}" );
+            }
 
             // Add the newly introduced image to the backdrop
             var paper = backdrop.Image;
@@ -89,13 +133,44 @@ namespace GifSceneMaker
             // We're making a new image, so copy the prior contents
             using ( Graphics grD = Graphics.FromImage( newPaper ) )
             {
-                grD.DrawImage( paper, new PointF( 0.0f, 0.0f ) );
+                //grD.DrawImage( paper, new PointF( 0.0f, 0.0f ) );
+            }
+
+            foreach ( var frameDimension in image.FrameDimensionsList )
+            {
+                var frameCount = image.GetFrameCount( new System.Drawing.Imaging.FrameDimension( frameDimension ) );
+
+                for ( int loop = 0; loop < frameCount; loop++ )
+                {
+                    image.SelectActiveFrame( new System.Drawing.Imaging.FrameDimension( frameDimension ), loop );
+                    newPaper.SelectActiveFrame( new System.Drawing.Imaging.FrameDimension( frameDimension ), loop );
+
+                    for ( int x = 0; x < image.Width; x++ )
+                    {
+                        for ( int y = 0; y < image.Height; y++ )
+                        {
+                            //newPaper.SetPixel( x, y, ( (Bitmap) image ).GetPixel( x, y ) );
+                        }
+                    }
+                    // Now add the new image
+                    using ( Graphics grD = Graphics.FromImage( newPaper ) )
+                    {
+                        grD.DrawImage( image, new PointF( 0, 0 ) );
+                    }
+                    //newPaper.SaveAdd( new System.Drawing.Imaging.EncoderParameters( 0 ) );
+                }
+            }
+
+            foreach ( var frameDimension in newPaper.FrameDimensionsList )
+            {
+                var frameCount = newPaper.GetFrameCount( new System.Drawing.Imaging.FrameDimension( frameDimension ) );
+                Console.WriteLine( $"Paper: {frameDimension}: {frameCount}" );
             }
 
             // Now add the new image
             using ( Graphics grD = Graphics.FromImage( newPaper ) )
             {
-                grD.DrawImage( image, new PointF( 0, 0 ) );
+//                grD.DrawImage( image, new PointF( 0, 0 ) );
             }
 
 
@@ -103,6 +178,7 @@ namespace GifSceneMaker
             backdrop.Width = newPaper.Width;
             backdrop.Height = newPaper.Height;
             backdrop.Image = newPaper;
+            */
         }
     }
 }
