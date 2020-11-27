@@ -20,6 +20,33 @@ namespace GifSceneMaker
 
             Gif selected = null;
             var currentMouseLocation = backdrop.Location;
+
+            backdrop.MouseWheel += delegate ( object sender, MouseEventArgs e )
+            {
+                if ( e.Delta != 0 && selected != null )
+                {
+                    var i = gifs.IndexOf( selected );
+                    gifs.Remove( selected );
+                    if ( e.Delta < 0 )
+                    {
+                        i--;
+                        if ( i < 0 )
+                        {
+                            i = gifs.Count();
+                        }
+                    }
+                    if ( e.Delta > 0 )
+                    {
+                        i++;
+                        if ( i >= gifs.Count() )
+                        {
+                            i = 0;
+                        }
+                    }
+                    gifs.Insert( i, selected );
+                }
+                updateBackdrop();
+            };
             backdrop.MouseMove += delegate ( object sender, MouseEventArgs e )
             {
                 if ( e.Button == MouseButtons.None )
@@ -102,9 +129,9 @@ namespace GifSceneMaker
         {
             var files = new String[]
                 {
+                    @"C:\Users\ian\Downloads\Gifs\Photo 25-11-2020, 20 17 49.gif",
                     @"C:\Users\ian\Downloads\Gifs\Photo 25-11-2020, 20 19 09.gif",
                     @"C:\Users\ian\Downloads\Gifs\Photo 25-11-2020, 20 17 26.gif",
-                    @"C:\Users\ian\Downloads\Gifs\Photo 25-11-2020, 20 17 49.gif",
                     @"C:\Users\ian\Downloads\Gifs\Photo 25-11-2020, 20 18 53.gif"
                 };
             var image = Image.FromFile( files[ nextImage ] );
