@@ -17,6 +17,35 @@ namespace GifSceneMaker
         public mainForm()
         {
             InitializeComponent();
+
+            Gif selected = null;
+            var currentMouseLocation = backdrop.Location;
+            backdrop.MouseMove += delegate ( object sender, MouseEventArgs e )
+            {
+                if ( e.Button == MouseButtons.None )
+                {
+                    selected = null;
+                    foreach ( var gif in gifs )
+                    {
+                        gif.Selected = false;
+                        if ( gif.IsWithin( e.Location ) )
+                        {
+                            selected = gif;
+                        }
+                    }
+                    if ( selected != null )
+                    {
+                        selected.Selected = true;
+                    }
+                }
+                else if ( e.Button == MouseButtons.Left && selected != null )
+                {
+                    selected.X += ( e.X - currentMouseLocation.X );
+                    selected.Y += ( e.Y - currentMouseLocation.Y );
+                }
+                currentMouseLocation = e.Location;
+                updateBackdrop();
+            };
         }
 
         private void mainForm_Load( object sender, EventArgs e )
